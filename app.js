@@ -1,5 +1,5 @@
 const path = require('path');
-
+const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -35,6 +35,6 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
+mongoose.connect('mongodb+srv://Muhammad:WuRr5nIhlPGHii8B@cluster0-hebyh.mongodb.net/test?retryWrites=true&w=majority').then((result) => {
   app.listen(3000);
-})
+}).catch(err => console.log(err));

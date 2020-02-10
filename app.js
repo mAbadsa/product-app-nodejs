@@ -1,54 +1,67 @@
 const path = require("path");
-const mongoose = require("mongoose");
+
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongodbSession = require("connect-mongodb-session")(session);
 
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
+const MONGODB_URI =
+  "mongodb+srv://Muhammad:WuRr5nIhlPGHii8B@cluster0-hebyh.mongodb.net/test";
+
 const app = express();
+const store = new MongodbSession({
+  uri: MONGODB_URI,
+  collection: "sessions"
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: "my Secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store
+  })
+);
 
 app.use((req, res, next) => {
-  User.findById("5e28998435a2c911c058a51d")
+  if(!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then(user => {
       req.user = user;
       next();
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(err => console.log(err));
 });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use(errorController.get404);
 
 mongoose
-  .connect(
-    "mongodb+srv://Muhammad:WuRr5nIhlPGHii8B@cluster0-hebyh.mongodb.net/shop?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false
-    }
-  )
+  .connect(MONGODB_URI)
   .then(result => {
     User.findOne().then(user => {
       if (!user) {
         const user = new User({
           name: "Muhammad",
-          email: "test@test.com",
+          email: "Muhammad@test.com",
           cart: {
             items: []
           }
@@ -58,4 +71,6 @@ mongoose
     });
     app.listen(3000);
   })
-  .catch(err => console.log(err));
+  .catch(err => {
+    console.log(err);
+  });

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -11,27 +11,25 @@ const productSchema = new Schema({
     type: Number,
     required: true
   },
-  imageUrl: {
+  description: {
     type: String,
     required: true
   },
-  description: {
+  imageUrl: {
     type: String,
     required: true
   },
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true
   }
 });
 
-const Product = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);
 
-module.exports = Product;
-
-// const mongodb = require("mongodb");
-// const getDb = require("../util/database").getDb;
+// const mongodb = require('mongodb');
+// const getDb = require('../util/database').getDb;
 
 // class Product {
 //   constructor(title, price, description, imageUrl, id, userId) {
@@ -40,26 +38,23 @@ module.exports = Product;
 //     this.description = description;
 //     this.imageUrl = imageUrl;
 //     this._id = id ? new mongodb.ObjectId(id) : null;
-//     this.userId = userId
+//     this.userId = userId;
 //   }
+
 //   save() {
 //     const db = getDb();
 //     let dbOp;
 //     if (this._id) {
-//       // Update existing product
+//       // Update the product
 //       dbOp = db
-//       .collection("products")
-//       .updateOne(
-//         { _id: this._id },
-//         { $set: { title: this.title, price: this.price, description: this.description, imageUrl: this.imageUrl}}
-//       );
+//         .collection('products')
+//         .updateOne({ _id: this._id }, { $set: this });
 //     } else {
-//       // Insert New Document
-//       dbOp = db.collection("products").insertOne(this);
+//       dbOp = db.collection('products').insertOne(this);
 //     }
 //     return dbOp
 //       .then(result => {
-//         // console.log(result);
+//         console.log(result);
 //       })
 //       .catch(err => {
 //         console.log(err);
@@ -69,11 +64,11 @@ module.exports = Product;
 //   static fetchAll() {
 //     const db = getDb();
 //     return db
-//       .collection("products")
+//       .collection('products')
 //       .find()
 //       .toArray()
 //       .then(products => {
-//         // console.log(products);
+//         console.log(products);
 //         return products;
 //       })
 //       .catch(err => {
@@ -84,11 +79,11 @@ module.exports = Product;
 //   static findById(prodId) {
 //     const db = getDb();
 //     return db
-//       .collection("products")
+//       .collection('products')
 //       .find({ _id: new mongodb.ObjectId(prodId) })
 //       .next()
 //       .then(product => {
-//         // console.log(product);
+//         console.log(product);
 //         return product;
 //       })
 //       .catch(err => {
@@ -99,12 +94,14 @@ module.exports = Product;
 //   static deleteById(prodId) {
 //     const db = getDb();
 //     return db
-//     .collection('products')
-//     .deleteOne({_id: new mongodb.ObjectId(prodId)})
-//     .then(result => {
-//       console.log("Product was deleted!");
-//     })
-//     .catch(err => console.log(err));
+//       .collection('products')
+//       .deleteOne({ _id: new mongodb.ObjectId(prodId) })
+//       .then(result => {
+//         console.log('Deleted');
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
 //   }
 // }
 

@@ -11,6 +11,8 @@ const User = require("./models/user");
 
 const MONGODB_URI =
   "mongodb+srv://Muhammad:WuRr5nIhlPGHii8B@cluster0-hebyh.mongodb.net/test";
+  // mongo "mongodb+srv://cluster0-hebyh.mongodb.net/test" --username Muhammad
+
 
 const app = express();
 const store = new MongodbSession({
@@ -37,7 +39,7 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  if(!req.session.user) {
+  if (!req.session.user) {
     return next();
   }
   User.findById(req.session.user._id)
@@ -57,18 +59,18 @@ app.use(errorController.get404);
 mongoose
   .connect(MONGODB_URI)
   .then(result => {
-    User.findOne().then(user => {
-      if (!user) {
-        const user = new User({
-          name: "Muhammad",
-          email: "Muhammad@test.com",
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
+    // User.findOne().then(user => {
+    //   if (!user) {
+    //     const user = new User({
+    //       name: "Muhammad",
+    //       email: "Muhammad@test.com",
+    //       cart: {
+    //         items: []
+    //       }
+    //     });
+    //     user.save();
+    //   }
+    // });
     app.listen(3000);
   })
   .catch(err => {

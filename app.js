@@ -5,20 +5,22 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongodbSession = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
 const MONGODB_URI =
   "mongodb+srv://Muhammad:WuRr5nIhlPGHii8B@cluster0-hebyh.mongodb.net/test";
-  // mongo "mongodb+srv://cluster0-hebyh.mongodb.net/test" --username Muhammad
-
+// mongo "mongodb+srv://cluster0-hebyh.mongodb.net/test" --username Muhammad
 
 const app = express();
 const store = new MongodbSession({
   uri: MONGODB_URI,
   collection: "sessions"
 });
+
+const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -37,6 +39,8 @@ app.use(
     store: store
   })
 );
+
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) {

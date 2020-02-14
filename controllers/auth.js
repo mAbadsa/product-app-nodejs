@@ -1,5 +1,13 @@
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const nodemailer = require('nodemailer');
+const sendGridTransport = require('nodemailer-sendgrid-transport');
+
+const transporter = nodemailer.createTransport(sendGridTransport({
+  auth: {
+    api_key: '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'
+  }
+}))
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash('error');
@@ -73,19 +81,25 @@ exports.postSignup = (req, res, next) => {
         req.flash("error", "E-mail exists already, Please pick a different one.");
         return res.redirect("/signup");
       }
-      return bcrypt.hash(password, 8);
-    })
-    .then(hashPassword => {
-      const user = new User({
-        email: email,
-        password: hashPassword,
-        cart: { items: [] }
-      });
-      return user.save();
-    })
-    .then(result => {
-      console.log(result);
-      res.redirect("/login");
+      return bcrypt
+      .hash(password, 8)
+      .then(hashPassword => {
+        const user = new User({
+          email: email,
+          password: hashPassword,
+          cart: { items: [] }
+        });
+        return user.save();
+      })
+      .then(result => {
+        res.redirect("/login");
+        return transporter.sendMail({
+          to: email,
+          from: 'product-app@node.com',
+          subject: 'Successfull login',
+          html: '<h1>You Successfully Signed up!</h1>'
+        })
+      }).catch(err => console.log(err));
     })
     .catch(err => {
       console.log(err);
@@ -99,3 +113,21 @@ exports.postlogout = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+exports.getReset = (req, res, next) => {
+  let message = req.flash('error');
+  if(message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/reset', {
+    path: '/reset',
+    pageTitle: 'Reset',
+    errorMessage: message
+  })
+}
+
+exports.postReset = (req, res, next) => {
+  
+}

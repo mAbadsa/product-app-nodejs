@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport");
 const crypto = require("crypto");
+const { validationResult } = require('express-validator');
 
 const transporter = nodemailer.createTransport(
   sendGridTransport({
@@ -74,6 +75,15 @@ exports.postLogin = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
+  const error = validationResult(req);
+  if(!error.isEmpty()) {
+    console.log(error.array());
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: error.array()[0].param + " " + error.array()[0].msg
+    });
+  }
   if (!email || !password) {
     req.flash("error", "Email and Password is required!");
     return res.redirect("/signup");

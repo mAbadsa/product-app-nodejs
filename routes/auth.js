@@ -1,5 +1,5 @@
 const express = require("express");
-const { check } = require("express-validator");
+const { check, body } = require("express-validator");
 
 const authController = require("../controllers/auth");
 
@@ -19,7 +19,7 @@ router.post(
     check("email")
       .isEmail()
       .withMessage("Please enter a valid email!"),
-    check("password").isLength({ min: 7 })
+    body("password", "Please Enter Password With Number and Text And At Least 7 characters.").isLength({ min: 7 }).isAlphanumeric()
   ],
   authController.postSignup
 );

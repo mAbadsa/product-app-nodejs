@@ -228,6 +228,7 @@ form {
 .user-message {
   margin: auto;
   width: 80%;
+  color: #0edf18;
   border: 1px solid #272ae6;
   background-color: rgba(56, 138, 231, 0.376);
   border-radius: 10px;
@@ -237,8 +238,9 @@ form {
 }
 
 .user-message--error {
+  color: #e62424;
   border: 1px solid #e62424;
-  background-color: rgba(241, 70, 70, 0.376);
+  background-color: rgba(251, 70, 85, 0.376);
 }
 
 @media (min-width: 768px) {

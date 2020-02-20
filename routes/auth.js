@@ -7,7 +7,21 @@ const router = express.Router();
 
 router.get("/login", authController.getLogin);
 
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    check("email")
+      .isEmail()
+      .withMessage("Please enter a valid email!"),
+    body(
+      "password",
+      "Please Enter Password With Number and Text And At Least 7 characters."
+    )
+      .isLength({ min: 7 })
+      .isAlphanumeric()
+  ],
+  authController.postLogin
+);
 
 router.post("/logout", authController.postlogout);
 
@@ -19,7 +33,12 @@ router.post(
     check("email")
       .isEmail()
       .withMessage("Please enter a valid email!"),
-    body("password", "Please Enter Password With Number and Text And At Least 7 characters.").isLength({ min: 7 }).isAlphanumeric(),
+    body(
+      "password",
+      "Please Enter Password With Number and Text And At Least 7 characters."
+    )
+      .isLength({ min: 7 })
+      .isAlphanumeric()
     // body("confirmPassword", "Please Enter Correct Password").custom(value => {
     //   return value === confirmPassword
     // }),

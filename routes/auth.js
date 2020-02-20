@@ -1,5 +1,5 @@
 const express = require("express");
-const { check } = require('express-validator');
+const { check } = require("express-validator");
 
 const authController = require("../controllers/auth");
 
@@ -13,7 +13,16 @@ router.post("/logout", authController.postlogout);
 
 router.get("/signup", authController.getSignup);
 
-router.post("/signup",[check('email').isEmail(), check('password').isLength({ min: 7 })] , authController.postSignup);
+router.post(
+  "/signup",
+  [
+    check("email")
+      .isEmail()
+      .withMessage("Please enter a valid email!"),
+    check("password").isLength({ min: 7 })
+  ],
+  authController.postSignup
+);
 
 router.get("/reset", authController.getReset);
 

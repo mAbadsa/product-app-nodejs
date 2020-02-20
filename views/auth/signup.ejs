@@ -8,7 +8,7 @@
 
     <main>
         <% if(errorMessage) { %> 
-            <div class="user-message user-message--error"><%= errorMessage %> </div>
+            <div class="user-message user-message--error"><%= errorMessage[0].msg %> </div>
         <% } %> 
         <form class="login-form" action="/signup" method="POST" novalidate>
             <div class="form-control">

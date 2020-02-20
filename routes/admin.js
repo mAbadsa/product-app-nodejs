@@ -18,7 +18,7 @@ router.post(
   [
     body("title")
       .isString()
-      .isLength({ min: 5 })
+      .isLength({ min: 3 })
       .trim(),
     body("imageUrl", "Please enter valid URL.")
       .isURL()

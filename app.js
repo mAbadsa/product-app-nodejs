@@ -21,6 +21,15 @@ const store = new MongodbSession({
 });
 
 const csrfProtection = csrf();
+
+const fileFilter = (req, file, cb) => {
+  if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
+
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
@@ -29,14 +38,6 @@ const fileStorage = multer.diskStorage({
     cb(null, new Date().toDateString() + "-" + file.originalname);
   }
 });
-
-const fileFilter = (req, file, cb) => {
-  if(file.mimeType === 'image/png' || file.mimeType === 'image/jpg' || file.mimeType === 'image/jpeg') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-}
 
 app.set("view engine", "ejs");
 app.set("views", "views");

@@ -14,11 +14,12 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, description, imageUrl, price } = req.body;
+  const { title, description, price } = req.body;
+  const imageUrl = req.file;
+  console.log(imageUrl);
   const errors = validationResult(req);
 
   if(!errors.isEmpty()) {
-    console.log(errors.array());
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Add Product",
       path: "/admin/add-product",
@@ -36,7 +37,6 @@ exports.postAddProduct = (req, res, next) => {
   }
 
   const product = new Product({
-    _id: new mongoose.Types.ObjectId('5e4d2d62f6f9711c044aabf8'),
     title: title,
     price: price,
     description: description,
@@ -155,7 +155,6 @@ exports.getProducts = (req, res, next) => {
     // .select('title price -_id')
     // .populate('userId', 'name')
     .then(products => {
-      // console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
@@ -163,7 +162,6 @@ exports.getProducts = (req, res, next) => {
       });
     })
     .catch(err => {
-      // res.redirect('/500');
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);
@@ -174,7 +172,6 @@ exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   Product.deleteOne({ _id: prodId, userId: req.user._id })
     .then(() => {
-      console.log("DESTROYED PRODUCT");
       res.redirect("/admin/products");
     })
     .catch(err => {

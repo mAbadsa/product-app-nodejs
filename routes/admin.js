@@ -20,9 +20,6 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body("imageUrl", "Please enter valid URL.")
-      .isURL()
-      .trim(),
     body("price", "Please enter valid price value")
       .isFloat()
       .trim(),

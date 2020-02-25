@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const Product = require("../models/product");
 const Order = require("../models/order");
 
@@ -76,7 +78,6 @@ exports.postCart = (req, res, next) => {
       return req.user.addToCart(product);
     })
     .then(result => {
-
       res.redirect("/cart");
     });
 };
@@ -139,4 +140,16 @@ exports.getOrders = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+};
+
+exports.getInvoice = (req, res, next) => {
+  const orderId = req.params.orderId;
+  const invoiceName = "invoice-" + orderId + ".pdf";
+  const filePath = path.join("data", "invoices", invoiceName);
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      return next(err);
+    }
+    res.send(data);
+  });
 };

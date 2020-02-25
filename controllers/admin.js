@@ -16,7 +16,6 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   const { title, description, price } = req.body;
   const image = req.file;
-  console.log(image);
   const errors = validationResult(req);
 
   if(!image) {
@@ -31,7 +30,8 @@ exports.postAddProduct = (req, res, next) => {
       },
       hasError: true,
       errorMessage: 'Attached file is not an iamge.',
-      validationErrors: []
+      validationErrors: [],
+      isLoaded: true
     });
   }
 
@@ -47,7 +47,8 @@ exports.postAddProduct = (req, res, next) => {
       },
       hasError: true,
       errorMessage: errors.array()[0].msg,
-      validationErrors: errors.array()
+      validationErrors: errors.array(),
+      isLoaded: true
     });
   }
 
@@ -168,7 +169,6 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  console.log("USER__", req.user);
   Product.find({ userId: req.user._id })
     // .select('title price -_id')
     // .populate('userId', 'name')

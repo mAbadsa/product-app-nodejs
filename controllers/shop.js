@@ -51,7 +51,6 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  console.log(req.user.populate("cart.items.productId"));
   req.user
     .populate("cart.items.productId")
     .execPopulate()
@@ -77,7 +76,7 @@ exports.postCart = (req, res, next) => {
       return req.user.addToCart(product);
     })
     .then(result => {
-      console.log(result);
+
       res.redirect("/cart");
     });
 };

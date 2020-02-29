@@ -156,6 +156,13 @@ exports.getInvoice = (req, res, next) => {
       }
       const invoiceName = "invoice-" + orderId + ".pdf";
       const filePath = path.join("data", "invoices", invoiceName);
+      const PDFDoc = new PDFDocument();
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+      PDFDoc.pipe(fs.createWriteStream(filePath));
+      PDFDoc.pipe(res);
+      PDFDoc.text('أهلين');
+      PDFDoc.end();
       // fs.readFile(filePath, (err, data) => {
       //   if (err) {
       //     return next(err);
@@ -167,10 +174,10 @@ exports.getInvoice = (req, res, next) => {
       //   );
       //   res.send(data);
       // });
-      const file = fs.createReadStream(filePath);
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"')
-      file.pipe(res);
+      // const file = fs.createReadStream(filePath);
+      // res.setHeader('Content-Type', 'application/pdf');
+      // res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"')
+      // file.pipe(res);
     })
     .catch(err => {
       console.log(err);

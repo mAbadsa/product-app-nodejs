@@ -257,7 +257,8 @@ form {
   transition: 0.4s;
 }
 .pagination a:hover,
-.pagination a:active {
+.pagination a:active,
+.pagination a.active {
   color: #ffffff;
   background-color: #00695c;
   transition: 0.4s;

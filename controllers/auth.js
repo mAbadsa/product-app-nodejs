@@ -165,7 +165,7 @@ exports.postSignup = (req, res, next) => {
 
 exports.postlogout = (req, res, next) => {
   req.session.destroy(err => {
-    console.log(err);
+    // console.log(err);
     res.redirect("/");
   });
 };

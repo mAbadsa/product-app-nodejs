@@ -179,7 +179,7 @@ exports.postOrder = (req, res, next) => {
       return order.save();
     })
     .then(result => {
-      const charge = stripe.charge.create({
+      const charge = stripe.charges.create({
         amount: totalSum * 100,
         currency: 'usd',
         description: "Demo Order",
@@ -192,6 +192,8 @@ exports.postOrder = (req, res, next) => {
       res.redirect("/orders");
     })
     .catch(err => {
+      console.log(err);
+      // res.redirect('/500');
       const error = new Error(err);
       error.httpStatusCode = 500;
       return next(error);

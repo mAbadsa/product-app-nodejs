@@ -7,19 +7,19 @@ const MongodbSession = require("connect-mongodb-session")(session);
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const errorController = require("./controllers/error");
-const shopController = require('./controllers/shop');
-const isAuth = require('./middleware/is-auth');
+const shopController = require("./controllers/shop");
+const isAuth = require("./middleware/is-auth");
 const User = require("./models/user");
 const multer = require("multer");
+const dotenv = require("dotenv");
+dotenv.config({ path: ".env" });
 
-const MONGODB_URI =
-  "mongodb+srv://Muhammad:WuRr5nIhlPGHii8B@cluster0-hebyh.mongodb.net/test";
-// mongo "mongodb+srv://cluster0-hebyh.mongodb.net/test" --username Muhammad
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const app = express();
 const store = new MongodbSession({
   uri: MONGODB_URI,
-  collection: "sessions"
+  collection: "sessions",
 });
 
 const csrfProtection = csrf();
@@ -42,7 +42,7 @@ const fileStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     cb(null, new Date().toDateString() + "-" + file.originalname);
-  }
+  },
 });
 
 app.set("view engine", "ejs");
@@ -64,7 +64,7 @@ app.use(
     secret: "my Secret",
     resave: false,
     saveUninitialized: false,
-    store: store
+    store: store,
   })
 );
 
@@ -75,14 +75,14 @@ app.use((req, res, next) => {
     return next();
   }
   User.findById(req.session.user._id)
-    .then(user => {
+    .then((user) => {
       if (!user) {
         return next();
       }
       req.user = user;
       next();
     })
-    .catch(err => {
+    .catch((err) => {
       throw new Error(err);
     });
 });
@@ -92,7 +92,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/create-order', isAuth, shopController.postOrder);
+app.post("/create-order", isAuth, shopController.postOrder);
 
 app.use(csrfProtection);
 
@@ -112,16 +112,16 @@ app.use(errorController.get404);
 app.use((error, req, res, next) => {
   // res.redirect("/500");
   console.log(error);
-  res.status(500).render('500', {
-    pageTitle: 'Error!',
-    path: '/500',
-    isAuthenticated: req.session.isLoggedIn
-  })
+  res.status(500).render("500", {
+    pageTitle: "Error!",
+    path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
+  });
 });
 
 mongoose
   .connect(MONGODB_URI)
-  .then(result => {
+  .then((result) => {
     // User.findOne().then(user => {
     //   if (!user) {
     //     const user = new User({
@@ -136,6 +136,7 @@ mongoose
     // });
     app.listen(3000);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
+

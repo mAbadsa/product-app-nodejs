@@ -141,6 +141,7 @@ exports.postSignup = (req, res, next) => {
             password: hashPassword,
             cart: { items: [] },
           });
+          console.log({ user });
           return user.save();
         })
         .then((result) => {
